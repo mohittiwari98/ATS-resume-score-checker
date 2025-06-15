@@ -8,7 +8,7 @@ function toggleMode() {
     window.scoreChart.update();
   }
 }
-
+ 
 function extractKeywords(text) {
   const stopwords = ['and','or','the','with','for','a','to','in','on','at','of','an','as','by','is','are'];
   return text.toLowerCase().match(/\b[a-z]{4,}\b/g)?.filter(w => !stopwords.includes(w)) || [];
