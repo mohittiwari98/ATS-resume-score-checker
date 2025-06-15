@@ -1,0 +1,89 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+  <meta charset="UTF-8" /> 
+  <title>ATS Score Checker</title> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/> 
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" 
+rel="stylesheet"> 
+  <link rel="stylesheet" href="style.css"> 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script> 
+  <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script> 
+</head> 
+<body class="bg-gradient-to-br from-blue-100 to-purple-100 min-h-screen"> 
+  <div class="container max-w-4xl mx-auto my-8 p-6 bg-white rounded-2xl shadow-lg"> 
+    <div class="flex justify-between items-center mb-6"> 
+      <h1 class="text-3xl font-bold text-gray-800 dark-mode:text-white-100">ATS Score 
+Checker</h1> 
+      <button class="toggle-mode px-4 py-2 bg-gray-800 text-white rounded-full 
+hover:bg-gray-700 dark-mode:bg-gray-600 dark-mode:hover:bg-gray-500" 
+onclick="toggleMode()">
+ 🌗
+ </button> 
+    </div> 
+ 
+    <div class="mb-6"> 
+      <label class="block text-sm font-medium text-white-700 dark-mode:text-gray-300 mb-2">Upload Resume (PDF/DOCX)</label> 
+      <input type="file" accept=".pdf,.docx" onchange="handleFile(this.files[0])" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" /> 
+    </div> 
+ 
+    <div class="mb-6"> 
+      <label class="block text-sm font-medium text-gray-700 dark-mode:text-gray-300 mb-2">Or 
+Paste Resume</label> 
+      <textarea id="resume" rows="8" placeholder="Paste resume here..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea> 
+    </div> 
+ 
+    <div class="mb-6"> 
+      <label class="block text-sm font-medium text-white-700 dark-mode:text-gray-300 
+mb-2">Paste Job Description</label> 
+      <textarea id="jd" rows="8" placeholder="Paste job description here..." class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea> 
+    </div> 
+ 
+    <div class="mb-6"> 
+      <h3 class="text-lg font-semibold text-gray-800 dark-mode:text-gray-100 mb-2">Customize Score Weights</h3> 
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4"> 
+        <div> 
+          <label class="block text-sm font-medium text-white-700 dark-mode:text-gray-300 mb-1">Keyword Match (Max 60)</label> 
+          <input id="weightKeyword" type="number" min="0" max="100" value="60" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+/> 
+        </div> 
+        <div> 
+          <label class="block text-sm font-medium text-white-700 dark-mode:text-gray-300 mb-1">Word Count (Max 10)</label> 
+          <input id="weightWord" type="number" min="0" max="100" value="10" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" /> 
+        </div> 
+        <div> 
+          <label class="block text-sm font-medium text-white-700 dark-mode:text-gray-300 mb-1">Contact Info (Max 10)</label> 
+          <input id="weightContact" type="number" min="0" max="100" value="10" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" /> 
+        </div> 
+        <div> 
+          <label class="block text-sm font-medium text-white-700 dark-mode:text-gray-300 mb-1">Social Links (Max 10)</label> 
+          <input id="weightSocial" type="number" min="0" max="100" value="10" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" /> 
+        </div> 
+        <div> 
+          <label class="block text-sm font-medium text-white-700 dark-mode:text-gray-300 mb-1">Line Spacing (Max 10)</label> 
+          <input id="weightSpacing" type="number" min="0" max="100" value="10" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" /> 
+        </div> 
+      </div> 
+    </div> 
+ 
+    <div class="flex space-x-4"> 
+      <button id="calculateBtn" class="btn-primary w-full md:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700" onclick="calculateScore()">Check ATS Score</button> 
+      <button id="clearBtn" class="btn-secondary w-full md:w-auto px-6 py-3 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600" onclick="clearInputs()">Clear Inputs</button> 
+    </div> 
+ 
+    <div id="scoreResult" class="text-2xl font-semibold text-center my-6 text-white-800 dark-mode:text-gray-100"></div> 
+    <div class="w-full bg-gray-200 rounded-full h-4 mb-6"> 
+      <div id="progressBar" class="progress-bar bg-blue-600 h-4 rounded-full" style="width: 0%"></div> 
+    </div> 
+    <canvas id="scoreChart" class="max-w-md mx-auto"></canvas> 
+    <div id="scoreBreakdown" class="mt-6 p-4 bg-gray-50 rounded-lg dark-mode:bg-white-700"></div> 
+    <div id="keywordSection" class="mt-6 p-4 bg-gray-50 rounded-lg dark-mode:bg-white-700"></div> 
+    <div id="formattingTips" class="mt-6 p-4 bg-gray-50 rounded-lg dark-mode:bg-white-700"></div> 
+    <div class="mt-4 text-center"> 
+      <button id="downloadBtn" class="btn-primary px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 hidden" onclick="downloadReport()">Download Report</button> 
+    </div> 
+  </div> 
+  <script src="script.js"></script> 
+</body> 
+</ht

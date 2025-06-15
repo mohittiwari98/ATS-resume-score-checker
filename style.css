@@ -1,0 +1,87 @@
+body { 
+    font-family: 'Inter', sans-serif; 
+    transition: background-color 0.3s, color 0.3s; 
+  } 
+   .dark-mode .h1{
+    color: white;
+   }
+  .dark-mode { 
+    background: linear-gradient(135deg, white, #374151); 
+    color: #e5e7eb; 
+  } 
+   
+  .container { 
+    transition: background-color 0.3s, box-shadow 0.3s; 
+  } 
+   
+  .dark-mode .container { 
+    background: #1f2937; 
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4); 
+  } 
+   
+  textarea, input[type="file"], input[type="number"] { 
+    transition: border-color 0.3s, background-color 0.3s; 
+  } 
+   
+  .dark-mode textarea, .dark-mode input[type="file"], .dark-mode input[type="number"] { 
+    background: #374151; 
+    border-color: #4b5563; 
+    color: #e5e7eb; 
+  } 
+   
+  .dark-mode #scoreBreakdown, .dark-mode #keywordSection, .dark-mode #formattingTips { 
+    text-decoration-color: white;
+    background: #374151; 
+    color: white;
+  } 
+  .text-gray-700 {
+    --tw-text-opacity: 1;
+    color: #30b1ac;
+}
+   
+  .btn-primary, .btn-secondary { 
+    transition: background-color 0.3s, transform 0.2s; 
+  } 
+   
+  .btn-primary:hover, .btn-secondary:hover { 
+    transform: translateY(-2px); 
+  } 
+   
+  .toggle-mode { 
+    transition: background-color 0.3s; 
+  } 
+   
+  .dark-mode .toggle-mode { 
+    background: #4b5563; 
+  } 
+   
+  .loading::after { 
+    content: ''; 
+    display: inline-block; 
+    width: 16px; 
+    height: 16px; 
+    border: 2px solid #fff; 
+    color: white;
+    border-top-color: transparent; 
+    border-radius: 50%; 
+    animation: spin 1s linear infinite; 
+    margin-left: 8px; 
+  } 
+   
+  @keyframes spin { 
+    to { transform: rotate(360deg); } 
+  } 
+   
+  .keyword-matched { 
+    color: #10b981; 
+    font-weight: 500; 
+  } 
+   
+  .keyword-missing { 
+    color: #e11d48; 
+    font-weight: 500; 
+  } 
+   
+  .progress-bar { 
+    transition: width 0.5s ease-in-out; 
+  } 
