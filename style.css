@@ -4,7 +4,7 @@ body {
   } 
    .dark-mode .h1{
     color: white;
-   }
+   } 
   .dark-mode { 
     background: linear-gradient(135deg, white, #374151); 
     color: #e5e7eb; 
