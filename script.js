@@ -1,3 +1,4 @@
+//no api required 
 function toggleMode() {
   document.body.classList.toggle("dark-mode");
   document.querySelectorAll(".dark-mode\\:text-gray-100").forEach(el => el.classList.toggle("text-gray-100"));
